@@ -2,21 +2,27 @@
 require __DIR__ . "/../classes/Aluno.php";
 
 // Inicializa as variáveis
-$nome = $idade = $cpf = "";
+$nome = $nascimento = $cpf = "";
 $alunoCriado = false;
 
 //Cadastrando
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = trim($_POST["nome"]);
-    $idade = trim($_POST["idade"]);
+    $nascimento = trim($_POST["nascimento"]);
     $cpf = trim($_POST["cpf"]);
     try {
-        $aluno = new Aluno($nome, $idade, $cpf);
-        $alunoCriado = true;
+        $aluno = new Aluno($nome, $nascimento, $cpf);
+        $alunoCriado = $aluno->cadastrar();
+        if ($alunoCriado === true) {
+            echo "<div class='alert alert-success mt-3'>Aluno cadastrado com sucesso!</div>";
+        } else {
+            echo "<div class='alert alert-danger mt-3'>Erro ao cadastrar aluno.</div>";
+        }
     } catch (Exception $e) {
         echo "<div class='alert alert-danger mt-3'>" . $e->getMessage() . "</div>";
     }
 }
+$alunos = Aluno::listar();
 ?>
 
 <h2>Cadastro de Aluno</h2>
@@ -34,10 +40,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             value="<?= htmlspecialchars($cpf) ?>">
     </div>
 
-    <div class="col-md-1">
-        <label for="idade" class="form-label">Idade:</label>
-        <input type="number" name="idade" id="idade" class="form-control"
-            value="<?= htmlspecialchars($idade) ?>">
+    <div class="col-md-2">
+        <label for="nascimento" class="form-label">Data de Nascimento:</label>
+        <input type="date" name="nascimento" id="nascimento" class="form-control"
+            value="<?= htmlspecialchars($nascimento) ?>">
     </div>
 
     <div class="col-12">
@@ -45,9 +51,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </form>
 
-<?php
-if ($alunoCriado) {
-    echo "<h3>Resultado:</h3>";
-    $aluno->exibirDados();
-}
-?>
+<h3>Lista de Alunos</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Data de Nascimento</th>
+        </tr>
+    </thead>
+    <tbody>
+       <?php if ($alunos && count($alunos) > 0): ?>
+            <?php foreach ($alunos as $aluno): ?>
+                <tr>
+                    <td><?= htmlspecialchars($aluno['nome']) ?></td>
+                    <td><?= htmlspecialchars($aluno['cpf']) ?></td>
+                    <td><?= htmlspecialchars($aluno['nascimento']) ?></td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr>
+                <td colspan="4" class="text-center">Nenhum aluno cadastrado.</td>
+            </tr>
+        <?php endif; ?>
+    </tbody>
+</table>

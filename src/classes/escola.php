@@ -1,5 +1,7 @@
 <?php
 
+require_once "db/db.php";
+
 class Escola {
     public $nome;
     public $endereco;
@@ -37,5 +39,29 @@ class Escola {
         echo "Endereço: <strong>$this->endereco</strong><br>";
         echo "Cidade: <strong>$this->cidade</strong><br>";
         echo "CNPJ: <strong>" . $this->getCnpj() . "</strong></p>";
+    }
+
+    // Método para cadastrar a escola no banco de dados
+    public function cadastrar() {
+        // Conexão com o banco de dados
+        $database = new Database();
+        $conn = $database->getConnection();
+
+        // Preparar a consulta SQL
+        $query = "INSERT INTO escola (nome, endereco, cidade, cnpj) VALUES (:nome, :endereco, :cidade, :cnpj)";
+        $stmt = $conn->prepare($query);
+
+        // Bind dos parâmetros
+        $stmt->bindParam(':nome', $this->nome);
+        $stmt->bindParam(':endereco', $this->endereco);
+        $stmt->bindParam(':cidade', $this->cidade);
+        $stmt->bindParam(':cnpj', $this->cnpj);
+
+        // Executar a consulta
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

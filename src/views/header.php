@@ -32,6 +32,13 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
                     <li class="nav-item"><a class="nav-link" href="index.php?page=curso">Cadastro de Curso</a></li>
                     <li class="nav-item"><a class="nav-link" href="index.php?page=escola">Cadastro de Escola</a></li>
                 </ul>
+
+                <?php if (isset($_SESSION['login_email'])) : ?>
+                    <div class="text-white me-3">
+                        <i class="bi bi-person-circle"></i> <?= htmlspecialchars($_SESSION['login_email']) ?>
+                    </div>
+                <?php endif; ?>
+
                 <a href="index.php?page=login" class="btn btn-outline-light">
                     <i class="bi bi-box-arrow-right"></i> Sair
                 </a>

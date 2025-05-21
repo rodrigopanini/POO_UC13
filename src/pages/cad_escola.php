@@ -1,5 +1,5 @@
 <?php
-require __DIR__. "../../classes/escola.php";
+require_once "src/classes/escola.php";
 
 // Inicializa as variáveis
 $nome = $endereco = $cidade = $cnpj = "";
@@ -7,15 +7,18 @@ $escolaCriado = false;
 
 //Cadastrando
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nome = trim($_POST["nome"]);
-    $endereco = trim($_POST["endereco"]);
-    $cnpj = trim($_POST["cnpj"]);
-    $cidade = trim($_POST["cidade"]);
-    try {
-        $escola = new Escola($nome, $endereco, $cidade, $cnpj);
-        $escolaCriado = true;
-    } catch (Exception $e) {
-        echo "<div class='alert alert-danger mt-3'>" . $e->getMessage() . "</div>";
+    $nome = $_POST["nome"];
+    $endereco = $_POST["endereco"];
+    $cnpj = $_POST["cnpj"];
+    $cidade = $_POST["cidade"];
+    
+    $escola = new Escola($nome, $endereco, $cidade, $cnpj);
+    $escolaCriado = $escola->cadastrar();
+
+    if ($escolaCriado) {
+        echo "<div class='alert alert-success'>Cadastro efetuado com sucesso</div>";
+    } else {
+        echo "<div class='alert alert-danger'>Erro ao cadastrar a escola</div>";
     }
 }
 ?>
@@ -51,10 +54,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <button type="submit" class="btn btn-primary">Cadastrar</button>
     </div>
 </form>
-
-<?php
-if ($escolaCriado) {
-    echo "<h3>Resultado:</h3>";
-    $escola->exibirDados();
-}
-?>
