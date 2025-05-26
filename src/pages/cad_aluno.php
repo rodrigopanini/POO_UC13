@@ -64,7 +64,9 @@ $alunos = Aluno::listar();
        <?php if ($alunos && count($alunos) > 0): ?>
             <?php foreach ($alunos as $aluno): ?>
                 <tr>
-                    <td><?= htmlspecialchars($aluno['nome']) ?></td>
+                    <td>
+                        <?= htmlspecialchars($aluno['nome']) ?>
+                    </td>
                     <td><?= htmlspecialchars($aluno['cpf']) ?></td>
                     <td><?= htmlspecialchars($aluno['nascimento']) ?></td>
                 </tr>
